@@ -82,7 +82,7 @@ const LayoutBase = props => {
     <ThemeGlobalMatery.Provider value={{ searchModal }}>
       <div
         id='theme-matery'
-        className={`${siteConfig('FONT_STYLE')} min-h-screen flex flex-col justify-between bg-white-background-gray dark:bg-black w-full scroll-smooth`}>
+        className={`${siteConfig('FONT_STYLE')} min-h-screen flex flex-col justify-between bg-emerald-50 dark:bg-black w-full scroll-smooth`}>
         <Style />
 
         {/* 顶部导航栏 */}
