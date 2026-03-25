@@ -11,7 +11,7 @@ const Style = () => {
         background-color: #dbf0d5;
     }
     .dark body{
-        background-color: black;
+        background-color: #424f3e;
     }
     
     /* fukasawa的首页响应式分栏 */
