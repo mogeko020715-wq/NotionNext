@@ -7,7 +7,7 @@
     content: "\f05a";
 }
 
-/* 目徥肥技期图片 导入 组仃 */
+/* 缩小 Announcement 公告字体 */
 .notion-collection-list-item[data-type="notice"] {
     font-size: 0.875rem !important;
 }
@@ -16,7 +16,7 @@
     font-size: 0.875rem !important;
 }
 
-/* 自定义样式 取证肥技期肥技 0r8rem */
+/* 进一步缩小正文到 0.8rem */
 .notion-collection-list-item[data-type="notice"] .notion-collection-list-item-body {
     font-size: 0.8rem !important;
 }
