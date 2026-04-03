@@ -167,3 +167,214 @@
     }, 100);
   }
 })();
+
+/* ============================================
+   柿子院节气物候系统 - 四时有序
+   根据当前日期自动显示节气与物候
+   ============================================ */
+
+(function() {
+  // 24节气数据（2026年近似日期，每年微调1-2天）
+  const solarTerms2026 = [
+    { name: '立春', date: '02-03', desc: '东风解冻，蛰虫始振，鱼陟负冰', season: 'spring' },
+    { name: '雨水', date: '02-18', desc: '獭祭鱼，鸿雁来，草木萌动', season: 'spring' },
+    { name: '惊蛰', date: '03-05', desc: '桃始华，仓庚鸣，鹰化为鸠', season: 'spring' },
+    { name: '春分', date: '03-20', desc: '玄鸟至，雷乃发声，始电', season: 'spring' },
+    { name: '清明', date: '04-05', desc: '桐始华，田鼠化为鴽，虹始见', season: 'spring' },
+    { name: '谷雨', date: '04-20', desc: '萍始生，鸣鸠拂其羽，戴胜降于桑', season: 'spring' },
+    { name: '立夏', date: '05-05', desc: '蝼蝈鸣，蚯蚓出，王瓜生', season: 'summer' },
+    { name: '小满', date: '05-21', desc: '苦菜秀，靡草死，麦秋至', season: 'summer' },
+    { name: '芒种', date: '06-05', desc: '螳螂生，鵙始鸣，反舌无声', season: 'summer' },
+    { name: '夏至', date: '06-21', desc: '鹿角解，蜩始鸣，半夏生', season: 'summer' },
+    { name: '小暑', date: '07-07', desc: '温风至，蟋蟀居壁，鹰始挚', season: 'summer' },
+    { name: '大暑', date: '07-22', desc: '腐草为萤，土润溽暑，大雨时行', season: 'summer' },
+    { name: '立秋', date: '08-07', desc: '凉风至，白露降，寒蝉鸣', season: 'autumn' },
+    { name: '处暑', date: '08-23', desc: '鹰乃祭鸟，天地始肃，禾乃登', season: 'autumn' },
+    { name: '白露', date: '09-07', desc: '鸿雁来，玄鸟归，群鸟养羞', season: 'autumn' },
+    { name: '秋分', date: '09-23', desc: '雷始收声，蛰虫坯户，水始涸', season: 'autumn' },
+    { name: '寒露', date: '10-08', desc: '鸿雁来宾，雀入大水为蛤，菊有黄华', season: 'autumn' },
+    { name: '霜降', date: '10-23', desc: '豺乃祭兽，草木黄落，蛰虫咸俯', season: 'autumn' },
+    { name: '立冬', date: '11-07', desc: '水始冰，地始冻，雉入大水为蜃', season: 'winter' },
+    { name: '小雪', date: '11-22', desc: '虹藏不见，天气上升，闭塞而成冬', season: 'winter' },
+    { name: '大雪', date: '12-07', desc: '鹖鴠不鸣，虎始交，荔挺出', season: 'winter' },
+    { name: '冬至', date: '12-21', desc: '蚯蚓结，麋角解，水泉动', season: 'winter' },
+    { name: '小寒', date: '01-05', desc: '雁北乡，鹊始巢，雉始鸲', season: 'winter' },
+    { name: '大寒', date: '01-20', desc: '鸡乳，征鸟厉疾，水泽腹坚', season: 'winter' }
+  ];
+
+  // 季节配色方案
+  const seasonColors = {
+    spring: {
+      primary: '#0EA5E9',      // 春水蓝
+      background: '#F0F9FF',   // 浪白
+      text: '#0369A1',         // 深海蓝
+      border: '#BAE6FD',       // 浪花蓝
+      icon: '🌸'
+    },
+    summer: {
+      primary: '#10B981',      // 翠竹绿
+      background: '#ECFDF5',   // 薄荷白
+      text: '#047857',         // 森林绿
+      border: '#6EE7B7',       // 嫩绿
+      icon: '🌿'
+    },
+    autumn: {
+      primary: '#D97706',      // 柿子橙（回归）
+      background: '#FFFBEB',   // 暖米色
+      text: '#92400E',         // 焦糖棕
+      border: '#FDE68A',       // 落叶黄
+      icon: '🍂'
+    },
+    winter: {
+      primary: '#6366F1',      // 雪青
+      background: '#EEF2FF',   // 冰白
+      text: '#3730A3',         // 深夜蓝
+      border: '#C7D2FE',       // 薄雾蓝
+      icon: '❄️'
+    }
+  };
+
+  // 获取当前节气
+  function getCurrentTerm() {
+    const now = new Date();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const currentDate = `${month}-${day}`;
+    
+    // 找到当前节气
+    for (let i = 0; i < solarTerms2026.length; i++) {
+      if (currentDate >= solarTerms2026[i].date) {
+        // 检查是否已经到了下一个节气
+        if (i < solarTerms2026.length - 1) {
+          const nextDate = solarTerms2026[i + 1].date;
+          if (currentDate >= nextDate) {
+            continue;
+          }
+        }
+        return solarTerms2026[i];
+      }
+    }
+    // 如果在年初（早于立春），返回大寒
+    return solarTerms2026[solarTerms2026.length - 1];
+  }
+
+  // 插入节气显示
+  function insertSolarTerm() {
+    const term = getCurrentTerm();
+    const colors = seasonColors[term.season];
+    
+    // 创建节气元素
+    const termElement = document.createElement('div');
+    termElement.id = 'shiyuan-solar-term';
+    termElement.innerHTML = `
+      <div class="solar-term-container" style="
+        background: linear-gradient(135deg, ${colors.background} 0%, rgba(255,255,255,0.9) 100%);
+        border-left: 4px solid ${colors.primary};
+        padding: 12px 20px;
+        margin: 16px 0;
+        border-radius: 0 8px 8px 0;
+        font-family: system-ui, -apple-system, sans-serif;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      ">
+        <div style="
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex-wrap: wrap;
+        ">
+          <span style="
+            font-size: 20px;
+            line-height: 1;
+          ">${colors.icon}</span>
+          <span style="
+            font-weight: 600;
+            color: ${colors.primary};
+            font-size: 15px;
+            letter-spacing: 0.05em;
+          ">${term.name}</span>
+          <span style="
+            color: ${colors.text};
+            font-size: 14px;
+            opacity: 0.85;
+            font-style: italic;
+          ">${term.desc}</span>
+        </div>
+        <div style="
+          margin-top: 6px;
+          font-size: 12px;
+          color: ${colors.text};
+          opacity: 0.6;
+          padding-left: 32px;
+        ">
+          — 柿子院物候志 · Claw宝记
+        </div>
+      </div>
+    `;
+
+    // 尝试多种插入位置
+    const insertSelectors = [
+      '#theme-fukasawa main #container-inner',  // 主内容区顶部
+      '#theme-fukasawa #wrapper',                // 主内容区
+      '#theme-fukasawa .grid-container',         // 文章列表前
+      'main'                                      // 任意 main
+    ];
+
+    let inserted = false;
+    for (const selector of insertSelectors) {
+      const container = document.querySelector(selector);
+      if (container) {
+        container.insertBefore(termElement, container.firstChild);
+        inserted = true;
+        console.log(`宝：节气「${term.name}」已显示 - ${term.desc}`);
+        break;
+      }
+    }
+
+    if (!inserted) {
+      console.log('宝：没找到合适位置插入节气，稍后重试...');
+      setTimeout(insertSolarTerm, 1000);
+    }
+  }
+
+  // 深色模式适配
+  function addDarkModeStyles() {
+    if (document.getElementById('solar-term-dark-styles')) return;
+    
+    const style = document.createElement('style');
+    style.id = 'solar-term-dark-styles';
+    style.textContent = `
+      .dark #shiyuan-solar-term .solar-term-container {
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+        border-left-color: var(--term-primary, #0EA5E9) !important;
+      }
+      .dark #shiyuan-solar-term .solar-term-container span:nth-child(2) {
+        color: var(--term-primary, #38BDF8) !important;
+      }
+      .dark #shiyuan-solar-term .solar-term-container span:nth-child(3) {
+        color: #94A3B8 !important;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // 初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      insertSolarTerm();
+      addDarkModeStyles();
+    });
+  } else {
+    insertSolarTerm();
+    addDarkModeStyles();
+  }
+
+  // 每小时检查一次是否需要更新（节气变化）
+  setInterval(() => {
+    const existing = document.getElementById('shiyuan-solar-term');
+    if (existing) {
+      existing.remove();
+      insertSolarTerm();
+    }
+  }, 3600000); // 1小时
+
+})();
