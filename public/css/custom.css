@@ -20,3 +20,69 @@
 .notion-collection-list-item[data-type="notice"] .notion-collection-list-item-body {
     font-size: 0.8rem !important;
 }
+
+/* ============================================
+   Fukasawa 主题 - 春季海洋配色（2026-04-03）
+   ============================================ */
+
+/* 主色调 - 链接、按钮（春水蓝）*/
+#theme-fukasawa a,
+#theme-fukasawa .notion-link,
+#theme-fukasawa .notion-collection-list-item a {
+    color: #0EA5E9 !important;
+    transition: color 0.2s ease;
+}
+
+#theme-fukasawa a:hover {
+    color: #0284C7 !important;
+}
+
+/* 左侧边栏背景（浅浪白）*/
+#theme-fukasawa .sideLeft,
+#theme-fukasawa .sideLeft.bg-white {
+    background-color: #F0F9FF !important;
+}
+
+/* 深色模式侧边栏适配 */
+.dark #theme-fukasawa .sideLeft {
+    background-color: #0C4A6E !important;
+}
+
+/* 文章卡片悬停效果（波光）*/
+#theme-fukasawa article:hover,
+#theme-fukasawa .notion-collection-card:hover {
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.12) !important;
+    transition: box-shadow 0.3s ease;
+}
+
+/* 分类标签颜色（浪花蓝）*/
+#theme-fukasawa .notion-property-select-item {
+    background-color: #BAE6FD !important;
+    color: #0369A1 !important;
+}
+
+/* 选中状态 */
+#theme-fukasawa .notion-property-select-item[data-active="true"],
+#theme-fukasawa .notion-property-select-item[active] {
+    background-color: #0EA5E9 !important;
+    color: white !important;
+}
+
+/* 公告区域 - 春天池塘感 */
+.notion-collection-list-item[data-type="notice"] {
+    border-left: 4px solid #0EA5E9 !important;
+    background-color: #E0F2FE !important;
+    transition: all 0.2s ease;
+}
+
+/* 深色模式公告适配 */
+.dark .notion-collection-list-item[data-type="notice"] {
+    background-color: #082F49 !important;
+    border-left-color: #38BDF8 !important;
+}
+
+/* 按钮/交互元素 */
+#theme-fukasawa button:hover,
+#theme-fukasawa .cursor-pointer:hover {
+    color: #0EA5E9 !important;
+}
