@@ -240,47 +240,84 @@ const Layout404 = props => {
       <div className="text-center z-10 px-8 max-w-xl">
         {/* 鸭子池塘 */}
         <div className="mb-8 relative">
-          <div className="mx-auto relative overflow-hidden" style={{
-            width: '280px',
-            height: '120px',
-            background: 'linear-gradient(180deg, #2d4a6f 0%, #1e3a5f 100%)',
+          <div className="mx-auto relative" style={{
+            width: '300px',
+            height: '140px',
+            background: 'linear-gradient(180deg, #3d5a80 0%, #2d4a6f 50%, #1e3a5f 100%)',
             borderRadius: '50%',
-            boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)'
+            boxShadow: '0 10px 40px rgba(0, 0, 0, 0.4), inset 0 5px 20px rgba(255,255,255,0.1)'
           }}>
-            {/* 鸭子 1 */}
-            <div className="absolute animate-float" style={{ top: '30%', left: '25%', animationDelay: '0s' }}>
-              <svg viewBox="0 0 100 100" width="60" height="60">
-                <ellipse cx="50" cy="65" rx="35" ry="25" fill="#f4d03f"/>
-                <circle cx="72" cy="55" r="18" fill="#f4d03f"/>
-                <polygon points="85,52 95,48 85,58" fill="#ff8c00"/>
-                <circle cx="78" cy="50" r="3" fill="#000"/>
-                <path d="M 25 55 Q 15 45 20 35 Q 25 25 35 30" fill="#f4d03f" stroke="#e5c02e" strokeWidth="2" fillOpacity="0.8"/>
-                <ellipse cx="40" cy="75" rx="8" ry="5" fill="#ff8c00"/>
-                <ellipse cx="60" cy="75" rx="8" ry="5" fill="#ff8c00"/>
+            {/* 水波纹 */}
+            <div className="absolute inset-0 rounded-full" style={{
+              background: 'radial-gradient(ellipse at 30% 40%, rgba(255,255,255,0.15) 0%, transparent 50%)'
+            }}/>
+            
+            {/* 鸭子 1 - 大鸭子 */}
+            <div className="absolute" style={{ 
+              top: '25%', 
+              left: '20%',
+              animation: 'float 3s ease-in-out infinite'
+            }}>
+              <svg width="70" height="70" viewBox="0 0 70 70" style={{ overflow: 'visible' }}>
+                {/* 身体 */}
+                <ellipse cx="35" cy="45" rx="28" ry="20" fill="#f4d03f"/>
+                {/* 头 */}
+                <circle cx="52" cy="28" r="16" fill="#f4d03f"/>
+                {/* 嘴巴 */}
+                <polygon points="64,24 72,20 64,32" fill="#ff8c00"/>
+                {/* 眼睛 */}
+                <circle cx="56" cy="24" r="2.5" fill="#000"/>
+                <circle cx="57" cy="23" r="0.8" fill="#fff"/>
+                {/* 翅膀 */}
+                <path d="M 15 40 Q 8 32 12 25 Q 18 20 25 28" fill="#f4d03f" stroke="#e5c02e" strokeWidth="1.5"/>
+                {/* 脚（简化） */}
+                <ellipse cx="28" cy="62" rx="6" ry="3" fill="#ff8c00"/>
+                <ellipse cx="45" cy="62" rx="6" ry="3" fill="#ff8c00"/>
               </svg>
             </div>
-            {/* 鸭子 2 */}
-            <div className="absolute animate-float" style={{ top: '35%', right: '30%', opacity: 0.8, animationDelay: '1s' }}>
-              <svg viewBox="0 0 100 100" width="45" height="45">
-                <ellipse cx="50" cy="65" rx="35" ry="25" fill="#f4d03f"/>
-                <circle cx="72" cy="55" r="18" fill="#f4d03f"/>
-                <polygon points="85,52 95,48 85,58" fill="#ff8c00"/>
-                <circle cx="78" cy="50" r="3" fill="#000"/>
-                <path d="M 25 55 Q 15 45 20 35 Q 25 25 35 30" fill="#f4d03f" stroke="#e5c02e" strokeWidth="2" fillOpacity="0.8"/>
+            
+            {/* 鸭子 2 - 中鸭子 */}
+            <div className="absolute" style={{ 
+              top: '35%', 
+              right: '25%',
+              opacity: 0.85,
+              animation: 'float 3s ease-in-out infinite',
+              animationDelay: '1s'
+            }}>
+              <svg width="50" height="50" viewBox="0 0 70 70" style={{ overflow: 'visible' }}>
+                <ellipse cx="35" cy="45" rx="28" ry="20" fill="#f4d03f"/>
+                <circle cx="52" cy="28" r="16" fill="#f4d03f"/>
+                <polygon points="64,24 72,20 64,32" fill="#ff8c00"/>
+                <circle cx="56" cy="24" r="2.5" fill="#000"/>
+                <circle cx="57" cy="23" r="0.8" fill="#fff"/>
+                <path d="M 15 40 Q 8 32 12 25 Q 18 20 25 28" fill="#f4d03f" stroke="#e5c02e" strokeWidth="1.5"/>
               </svg>
             </div>
-            {/* 鸭子 3 */}
-            <div className="absolute animate-float" style={{ top: '50%', left: '55%', opacity: 0.6, animationDelay: '2s' }}>
-              <svg viewBox="0 0 100 100" width="35" height="35">
-                <ellipse cx="50" cy="65" rx="35" ry="25" fill="#f4d03f"/>
-                <circle cx="72" cy="55" r="18" fill="#f4d03f"/>
-                <polygon points="85,52 95,48 85,58" fill="#ff8c00"/>
-                <circle cx="78" cy="50" r="3" fill="#000"/>
+            
+            {/* 鸭子 3 - 小鸭子 */}
+            <div className="absolute" style={{ 
+              top: '50%', 
+              left: '50%',
+              opacity: 0.7,
+              animation: 'float 3s ease-in-out infinite',
+              animationDelay: '2s'
+            }}>
+              <svg width="40" height="40" viewBox="0 0 70 70" style={{ overflow: 'visible' }}>
+                <ellipse cx="35" cy="45" rx="28" ry="20" fill="#f4d03f"/>
+                <circle cx="52" cy="28" r="16" fill="#f4d03f"/>
+                <polygon points="64,24 72,20 64,32" fill="#ff8c00"/>
+                <circle cx="56" cy="24" r="2.5" fill="#000"/>
+                <circle cx="57" cy="23" r="0.8" fill="#fff"/>
               </svg>
             </div>
           </div>
+          
           {/* 问号气泡 */}
-          <div className="absolute -top-4 right-20 bg-white/15 backdrop-blur-md px-4 py-2 rounded-full text-2xl animate-bounce" style={{ border: '1px solid rgba(255,255,255,0.2)' }}>
+          <div className="absolute -top-2 right-16 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full text-xl" 
+            style={{ 
+              border: '1px solid rgba(255,255,255,0.3)',
+              animation: 'bounce 2s infinite'
+            }}>
             ❓
           </div>
         </div>
