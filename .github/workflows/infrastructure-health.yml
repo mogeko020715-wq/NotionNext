@@ -1,0 +1,54 @@
+## 柿子院运维监控
+## Infrastructure Maintainer 风格 - 自动化健康检查
+
+name: Infrastructure Health Check
+
+on:
+  schedule:
+    # 每 6 小时运行一次 (UTC 时间)
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/monitoring/**'
+
+jobs:
+  health-check:
+    name: 健康检查
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+      
+      - name: 设置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      
+      - name: 安装依赖
+        run: pip install requests
+      
+      - name: 运行健康检查
+        run: python .github/monitoring/health_check.py
+        
+      - name: 上传检查报告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: health-check-report
+          path: /home/runner/work/NotionNext/NotionNext/monitoring/health_*.json
+          retention-days: 30
+          
+      - name: 检查失败通知
+        if: failure()
+        run: |
+          echo "🚨 柿子院健康检查失败！"
+          echo ""
+          echo "可能的原因:"
+          echo "   - 网站无法访问"
+          echo "   - 响应时间超过阈值"
+          echo "   - 特定页面返回错误"
+          echo ""
+          echo "请检查 Vercel 部署状态: https://vercel.com/dashboard"
