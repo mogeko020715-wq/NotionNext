@@ -1,5 +1,5 @@
 // 这里编写自定义js脚本；将被静态引入到页面中
-// 版本: 2026-04-04-v2 | 修复缓存问题
+// 版本: 2026-04-04-v3 | 修复节气插入位置
 
 /* ============================================
    柿子院暗号系统 - 只有麦和宝知道
@@ -253,80 +253,100 @@
     return solarTerms2026[solarTerms2026.length - 1];
   }
 
-  // 插入节气显示 - 修复：添加重试次数限制
+  // 插入节气显示 - 修复位置：在文章网格之前插入
   function insertSolarTerm() {
     const term = getCurrentTerm();
     const colors = seasonColors[term.season];
     
     const termElement = document.createElement('div');
     termElement.id = 'shiyuan-solar-term';
+    termElement.style.cssText = `
+      max-width: 1200px;
+      margin: 0 auto 20px;
+      padding: 0 16px;
+    `;
     termElement.innerHTML = `
       <div class="solar-term-container" style="
         background: linear-gradient(135deg, ${colors.background} 0%, rgba(255,255,255,0.9) 100%);
         border-left: 4px solid ${colors.primary};
-        padding: 12px 20px;
-        margin: 16px 0;
-        border-radius: 0 8px 8px 0;
+        padding: 16px 24px;
+        border-radius: 0 12px 12px 0;
         font-family: system-ui, -apple-system, sans-serif;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
       ">
         <div style="
           display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 16px;
           flex-wrap: wrap;
         ">
-          <span style="font-size: 20px; line-height: 1;">${colors.icon}</span>
-          <span style="
-            font-weight: 600;
-            color: ${colors.primary};
-            font-size: 15px;
-            letter-spacing: 0.05em;
-          ">${term.name}</span>
-          <span style="
+          <span style="font-size: 28px; line-height: 1;">${colors.icon}</span>
+          <div>
+            <div style="
+              font-weight: 600;
+              color: ${colors.primary};
+              font-size: 18px;
+              letter-spacing: 0.08em;
+              margin-bottom: 4px;
+            ">${term.name}</div>
+            <div style="
+              color: ${colors.text};
+              font-size: 14px;
+              opacity: 0.9;
+            ">${term.desc}</div>
+          </div>
+          <div style="
+            margin-left: auto;
+            font-size: 12px;
             color: ${colors.text};
-            font-size: 14px;
-            opacity: 0.85;
+            opacity: 0.6;
             font-style: italic;
-          ">${term.desc}</span>
-        </div>
-        <div style="
-          margin-top: 6px;
-          font-size: 12px;
-          color: ${colors.text};
-          opacity: 0.6;
-          padding-left: 32px;
-        ">
-          — 柿子院物候志 · Claw宝记
+          ">
+            — 柿子院物候志 · Claw宝记
+          </div>
         </div>
       </div>
     `;
 
-    // 尝试多种插入位置 - 修复：简化选择器，增加兼容性
-    const insertSelectors = [
-      'main article:first-of-type',
-      'main .notion-page',
-      '#theme-fukasawa main',
-      'main'
-    ];
-
+    // 修复：在文章网格之前插入（作为兄弟节点，不是子节点）
+    const gridContainer = document.querySelector('.grid-container');
+    const mainContainer = document.querySelector('#container-inner') || document.querySelector('main');
+    
     let inserted = false;
-    for (const selector of insertSelectors) {
+    
+    // 方案1：在 grid-container 之前插入（最佳位置）
+    if (gridContainer && gridContainer.parentElement) {
       try {
-        const container = document.querySelector(selector);
-        if (container) {
-          container.insertBefore(termElement, container.firstChild);
+        gridContainer.parentElement.insertBefore(termElement, gridContainer);
+        inserted = true;
+        console.log(`宝：节气「${term.name}」已显示在文章网格前`);
+      } catch (e) {
+        console.log('插入到网格前失败:', e.message);
+      }
+    }
+    
+    // 方案2：在 main container 内的合适位置
+    if (!inserted && mainContainer) {
+      try {
+        // 查找 main 内的第一个块级元素（通常是介绍文字）
+        const firstBlock = mainContainer.querySelector('.notion-text, .notion-viewport, article, div[class*="block"]');
+        if (firstBlock && firstBlock.parentElement === mainContainer) {
+          // 在第一个块之后插入
+          if (firstBlock.nextElementSibling) {
+            mainContainer.insertBefore(termElement, firstBlock.nextElementSibling);
+          } else {
+            mainContainer.appendChild(termElement);
+          }
           inserted = true;
-          console.log(`宝：节气「${term.name}」已显示`);
-          break;
+          console.log(`宝：节气「${term.name}」已显示在介绍后`);
         }
       } catch (e) {
-        console.log('插入失败:', selector, e.message);
+        console.log('插入到 main 失败:', e.message);
       }
     }
 
     if (!inserted) {
-      console.log('宝：当前页面不支持显示节气');
+      console.log('宝：未找到合适的插入位置，节气未显示');
     }
   }
 
@@ -339,30 +359,31 @@
       .dark #shiyuan-solar-term .solar-term-container {
         background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
         border-left-color: var(--term-primary, #0EA5E9) !important;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.2) !important;
       }
-      .dark #shiyuan-solar-term .solar-term-container span:nth-child(2) {
+      .dark #shiyuan-solar-term .solar-term-container div div:first-child {
         color: var(--term-primary, #38BDF8) !important;
       }
-      .dark #shiyuan-solar-term .solar-term-container span:nth-child(3) {
+      .dark #shiyuan-solar-term .solar-term-container div div:last-child {
         color: #94A3B8 !important;
       }
     `;
     document.head.appendChild(style);
   }
 
-  // 初始化 - 修复：只在首页执行，避免文章页报错
+  // 初始化 - 只在首页显示节气
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       addDarkModeStyles();
-      // 只在首页显示节气
       if (window.location.pathname === '/' || window.location.pathname === '') {
-        insertSolarTerm();
+        // 延迟一点确保页面结构加载完成
+        setTimeout(insertSolarTerm, 100);
       }
     });
   } else {
     addDarkModeStyles();
     if (window.location.pathname === '/' || window.location.pathname === '') {
-      insertSolarTerm();
+      setTimeout(insertSolarTerm, 100);
     }
   }
 })();
