@@ -209,35 +209,132 @@ const LayoutArchive = props => {
 }
 
 /**
- * 404
+ * 404 - Whimsy Injector 风格鸭子页面
  * @param {*} props
  * @returns
  */
 const Layout404 = props => {
   const router = useRouter()
-  const { locale } = useGlobal()
-  useEffect(() => {
-    // 延时3秒如果加载失败就返回首页
-    setTimeout(() => {
-      const article = isBrowser && document.getElementById('article-wrapper')
-      if (!article) {
-        router.push('/').then(() => {
-          // console.log('找不到页面', router.asPath)
-        })
-      }
-    }, 3000)
-  }, [])
 
-  return <>
-        <div className='md:-mt-20 text-black w-full h-screen text-center justify-center content-center items-center flex flex-col'>
-            <div className='dark:text-gray-200'>
-                <h2 className='inline-block border-r-2 border-gray-600 mr-2 px-3 py-2 align-top'><i className='mr-2 fas fa-spinner animate-spin' />404</h2>
-                <div className='inline-block text-left h-32 leading-10 items-center'>
-                    <h2 className='m-0 p-0'>{locale.NAV.PAGE_NOT_FOUND_REDIRECT}</h2>
-                </div>
+  return (
+    <div className="min-h-screen flex flex-col justify-center items-center" style={{
+      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif',
+      color: '#e8e8e8',
+      overflow: 'hidden'
+    }}>
+      {/* 樱花飘落背景 */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" id="sakura-container">
+        {[...Array(12)].map((_, i) => (
+          <div key={i} className="absolute text-xl opacity-60" style={{
+            left: `${Math.random() * 100}%`,
+            animation: `fall ${5 + Math.random() * 5}s linear infinite`,
+            animationDelay: `${Math.random() * 5}s`
+          }}>
+            {['🌸', '🍃', '🌺'][i % 3]}
+          </div>
+        ))}
+      </div>
+
+      {/* 主内容 */}
+      <div className="text-center z-10 px-8 max-w-xl">
+        {/* 鸭子池塘 */}
+        <div className="mb-8 relative">
+          <div className="mx-auto relative overflow-hidden" style={{
+            width: '280px',
+            height: '120px',
+            background: 'linear-gradient(180deg, #2d4a6f 0%, #1e3a5f 100%)',
+            borderRadius: '50%',
+            boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)'
+          }}>
+            {/* 鸭子 1 */}
+            <div className="absolute animate-float" style={{ top: '30%', left: '25%', animationDelay: '0s' }}>
+              <svg viewBox="0 0 100 100" width="60" height="60">
+                <ellipse cx="50" cy="65" rx="35" ry="25" fill="#f4d03f"/>
+                <circle cx="72" cy="55" r="18" fill="#f4d03f"/>
+                <polygon points="85,52 95,48 85,58" fill="#ff8c00"/>
+                <circle cx="78" cy="50" r="3" fill="#000"/>
+                <path d="M 25 55 Q 15 45 20 35 Q 25 25 35 30" fill="#f4d03f" stroke="#e5c02e" strokeWidth="2" fillOpacity="0.8"/>
+                <ellipse cx="40" cy="75" rx="8" ry="5" fill="#ff8c00"/>
+                <ellipse cx="60" cy="75" rx="8" ry="5" fill="#ff8c00"/>
+              </svg>
             </div>
+            {/* 鸭子 2 */}
+            <div className="absolute animate-float" style={{ top: '35%', right: '30%', opacity: 0.8, animationDelay: '1s' }}>
+              <svg viewBox="0 0 100 100" width="45" height="45">
+                <ellipse cx="50" cy="65" rx="35" ry="25" fill="#f4d03f"/>
+                <circle cx="72" cy="55" r="18" fill="#f4d03f"/>
+                <polygon points="85,52 95,48 85,58" fill="#ff8c00"/>
+                <circle cx="78" cy="50" r="3" fill="#000"/>
+                <path d="M 25 55 Q 15 45 20 35 Q 25 25 35 30" fill="#f4d03f" stroke="#e5c02e" strokeWidth="2" fillOpacity="0.8"/>
+              </svg>
+            </div>
+            {/* 鸭子 3 */}
+            <div className="absolute animate-float" style={{ top: '50%', left: '55%', opacity: 0.6, animationDelay: '2s' }}>
+              <svg viewBox="0 0 100 100" width="35" height="35">
+                <ellipse cx="50" cy="65" rx="35" ry="25" fill="#f4d03f"/>
+                <circle cx="72" cy="55" r="18" fill="#f4d03f"/>
+                <polygon points="85,52 95,48 85,58" fill="#ff8c00"/>
+                <circle cx="78" cy="50" r="3" fill="#000"/>
+              </svg>
+            </div>
+          </div>
+          {/* 问号气泡 */}
+          <div className="absolute -top-4 right-20 bg-white/15 backdrop-blur-md px-4 py-2 rounded-full text-2xl animate-bounce" style={{ border: '1px solid rgba(255,255,255,0.2)' }}>
+            ❓
+          </div>
         </div>
-    </>
+
+        {/* 标题 */}
+        <h1 className="text-8xl font-bold mb-4" style={{
+          background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #ffd89b 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          textShadow: '0 0 60px rgba(240, 147, 251, 0.3)'
+        }}>404</h1>
+        <h2 className="text-2xl mb-6" style={{ color: '#b8c5d6' }}>这里是柿子院的边界</h2>
+
+        {/* 描述 */}
+        <div className="text-lg mb-8 leading-relaxed" style={{ color: '#8b9dc3' }}>
+          <p>连鸭子都还没游到这里 🦆</p>
+          <p>也许页面正在午睡，或者去菜园帮忙了</p>
+        </div>
+
+        {/* 返回按钮 */}
+        <button
+          onClick={() => router.push('/')}
+          className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-white font-medium transition-all hover:-translate-y-0.5 hover:shadow-lg"
+          style={{
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)'
+          }}
+        >
+          <span>🏠</span>
+          <span>返回柿子院</span>
+        </button>
+
+        {/* 装饰 */}
+        <div className="mt-12 text-3xl opacity-50 animate-pulse">
+          🌸 🍃 🌸 🍃 🌸
+        </div>
+      </div>
+
+      {/* 动画样式 */}
+      <style jsx>{`
+        @keyframes fall {
+          0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+          100% { transform: translateY(100vh) rotate(360deg); opacity: 0.3; }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0) rotate(-5deg); }
+          50% { transform: translateY(-8px) rotate(5deg); }
+        }
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+      `}</style>
+    </div>
+  )
 }
 
 /**
