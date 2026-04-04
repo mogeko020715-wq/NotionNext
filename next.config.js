@@ -347,4 +347,4 @@ const nextConfig = {
 
 module.exports = process.env.ANALYZE
   ? withBundleAnalyzer(nextConfig)
-  : nextConfie
+  : nextConfig
