@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - 鸭子还没游过来 | 柿子院</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            color: #e8e8e8;
+            overflow: hidden;
+        }
+
+        /* 飘落的樱花动画背景 */
+        .sakura-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .sakura {
+            position: absolute;
+            font-size: 20px;
+            animation: fall linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0.3;
+            }
+        }
+
+        /* 主内容区 */
+        .container {
+            text-align: center;
+            z-index: 1;
+            padding: 2rem;
+            max-width: 600px;
+        }
+
+        /* 鸭子插画区域 */
+        .duck-scene {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .pond {
+            width: 280px;
+            height: 120px;
+            background: linear-gradient(180deg, #2d4a6f 0%, #1e3a5f 100%);
+            border-radius: 50%;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .pond::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 20%;
+            width: 60%;
+            height: 30%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            border-radius: 50%;
+        }
+
+        /* 鸭子 SVG */
+        .duck {
+            position: absolute;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+        }
+
+        .duck svg {
+            width: 60px;
+            height: 60px;
+        }
+
+        .duck-1 {
+            top: 30%;
+            left: 25%;
+            animation-delay: 0s;
+        }
+
+        .duck-2 {
+            top: 35%;
+            right: 30%;
+            animation-delay: 1s;
+            opacity: 0.8;
+        }
+
+        .duck-2 svg {
+            width: 45px;
+            height: 45px;
+        }
+
+        .duck-3 {
+            top: 50%;
+            left: 55%;
+            animation-delay: 2s;
+            opacity: 0.6;
+        }
+
+        .duck-3 svg {
+            width: 35px;
+            height: 35px;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(-5deg);
+            }
+            50% {
+                transform: translateY(-8px) rotate(5deg);
+            }
+        }
+
+        /* 问号气泡 */
+        .question-bubble {
+            position: absolute;
+            top: -20px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 24px;
+            animation: pop 2s ease-in-out infinite;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes pop {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* 标题 */
+        h1 {
+            font-size: 6rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #ffd89b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 60px rgba(240, 147, 251, 0.3);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #b8c5d6;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        /* 描述文字 */
+        .description {
+            font-size: 1.1rem;
+            color: #8b9dc3;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .description p {
+            margin-bottom: 0.5rem;
+        }
+
+        /* 返回按钮 */
+        .home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            border: none;
+            cursor: pointer;
+        }
+
+        .home-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .home-btn:active {
+            transform: translateY(0);
+        }
+
+        /* 装饰元素 */
+        .decoration {
+            margin-top: 3rem;
+            font-size: 2rem;
+            opacity: 0.5;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 4rem;
+            }
+            h2 {
+                font-size: 1.2rem;
+            }
+            .pond {
+                width: 220px;
+                height: 100px;
+            }
+            .duck {
+                font-size: 45px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 樱花飘落背景 -->
+    <div class="sakura-container" id="sakuraContainer"></div>
+
+    <div class="container">
+        <!-- 鸭子池塘场景 -->
+        <div class="duck-scene">
+            <div class="pond">
+                <div class="duck duck-1">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="50" cy="65" rx="35" ry="25" fill="#f4d03f"/>
+                        <circle cx="72" cy="55" r="18" fill="#f4d03f"/>
+                        <polygon points="85,52 95,48 85,58" fill="#ff8c00"/>
+                        <circle cx="78" cy="50" r="3" fill="#000"/>
+                        <path d="M 25 55 Q 15 45 20 35 Q 25 25 35 30" fill="#f4d03f" stroke="#e5c02e" stroke-width="2" fill-opacity="0.8"/>
+                        <ellipse cx="40" cy="75" rx="8" ry="5" fill="#ff8c00"/>
+                        <ellipse cx="60" cy="75" rx="8" ry="5" fill="#ff8c00"/>
+                    </svg>
+                </div>
+                <div class="duck duck-2">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="50" cy="65" rx="35" ry="25" fill="#f4d03f"/>
+                        <circle cx="72" cy="55" r="18" fill="#f4d03f"/>
+                        <polygon points="85,52 95,48 85,58" fill="#ff8c00"/>
+                        <circle cx="78" cy="50" r="3" fill="#000"/>
+                        <path d="M 25 55 Q 15 45 20 35 Q 25 25 35 30" fill="#f4d03f" stroke="#e5c02e" stroke-width="2" fill-opacity="0.8"/>
+                    </svg>
+                </div>
+                <div class="duck duck-3">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="50" cy="65" rx="35" ry="25" fill="#f4d03f"/>
+                        <circle cx="72" cy="55" r="18" fill="#f4d03f"/>
+                        <polygon points="85,52 95,48 85,58" fill="#ff8c00"/>
+                        <circle cx="78" cy="50" r="3" fill="#000"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="question-bubble">❓</div>
+        </div>
+
+        <!-- 标题 -->
+        <h1>404</h1>
+        <h2>这里是柿子院的边界</h2>
+
+        <!-- 描述 -->
+        <div class="description">
+            <p>连鸭子都还没游到这里 🦆</p>
+            <p>也许页面正在午睡，或者去菜园帮忙了</p>
+        </div>
+
+        <!-- 返回按钮 -->
+        <a href="/" class="home-btn">
+            <span>🏠</span>
+            <span>返回柿子院</span>
+        </a>
+
+        <!-- 装饰 -->
+        <div class="decoration">
+            🌸 🍃 🌸 🍃 🌸
+        </div>
+    </div>
+
+    <script>
+        // 生成樱花
+        function createSakura() {
+            const container = document.getElementById('sakuraContainer');
+            const sakuraCount = 15;
+            
+            for (let i = 0; i < sakuraCount; i++) {
+                const sakura = document.createElement('div');
+                sakura.className = 'sakura';
+                sakura.innerHTML = ['🌸', '🌺', '🍃'][Math.floor(Math.random() * 3)];
+                sakura.style.left = Math.random() * 100 + '%';
+                sakura.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                sakura.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(sakura);
+            }
+        }
+
+        createSakura();
+
+        // 随机鸭子对话（彩蛋）
+        const duckMessages = [
+            '嘎嘎？（疑惑）',
+            '这里好像没鱼...',
+            '要去菜园看看吗？',
+            '等等，让我问问其他鸭子',
+            '柿子还没熟呢'
+        ];
+
+        document.querySelector('.pond').addEventListener('click', function() {
+            const bubble = document.querySelector('.question-bubble');
+            const original = bubble.textContent;
+            bubble.textContent = duckMessages[Math.floor(Math.random() * duckMessages.length)];
+            bubble.style.fontSize = '14px';
+            setTimeout(() => {
+                bubble.textContent = original;
+                bubble.style.fontSize = '24px';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
