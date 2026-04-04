@@ -1,0 +1,60 @@
+## 自动检查 Notion 数据库中的空 slug
+## DevOps Automator 风格 - 预防构建失败
+
+name: Check Notion Slugs
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  check-slugs:
+    name: 检查空 slug
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+      
+      - name: 设置 Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: 安装依赖
+        run: pip install requests
+      
+      - name: 检查空 slug
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+        run: python .github/scripts/check_slug.py
+        
+      - name: 检查通过通知
+        if: success()
+        run: |
+          echo "✅ 所有 Notion 条目都有 slug，可以继续构建！"
+          echo ""
+          echo "📊 DevOps Metrics:"
+          echo "   - 检查类型: 数据完整性"
+          echo "   - 阻止类型: 构建失败"
+          echo "   - 修复成本: 低（在 Notion 中添加 slug）"
+          
+      - name: 检查失败通知
+        if: failure()
+        run: |
+          echo ""
+          echo "🛠️  如何修复:"
+          echo "   1. 打开 Notion → 小院柿子落数据库"
+          echo "   2. 找到上面列出的条目"
+          echo "   3. 在 slug 字段填入 URL 友好的标识"
+          echo "   4. 保存后重新触发构建"
+          echo ""
+          echo "💡 slug 示例:"
+          echo "   '清明｜气清景明' → 'qingming'"
+          echo "   '菜园花圃' → 'garden'"
+          echo "   '配置中心' → 'config'"
