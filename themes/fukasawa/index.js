@@ -19,6 +19,7 @@ import BlogListPage from './components/BlogListPage'
 import BlogListScroll from './components/BlogListScroll'
 import BlogArchiveItem from './components/BlogPostArchive'
 import Header from './components/Header'
+import LoadingCover from './components/LoadingCover'
 import TagItemMini from './components/TagItemMini'
 import CONFIG from './config'
 import { Style } from './style'
@@ -50,6 +51,7 @@ const LayoutBase = props => {
   const searchModal = useRef(null)
   return (
     <ThemeGlobalFukasawa.Provider value={{ searchModal }}>
+      <LoadingCover />
       <div
         id='theme-fukasawa'
         className={`${siteConfig('FONT_STYLE')} dark:bg-black scroll-smooth`}>
