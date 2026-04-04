@@ -1,5 +1,5 @@
 // 这里编写自定义js脚本；将被静态引入到页面中
-// 版本: 2026-04-04-v3 | 修复节气插入位置
+// 版本: 2026-04-04-v4 | 修复节气位置：页面最顶端
 
 /* ============================================
    柿子院暗号系统 - 只有麦和宝知道
@@ -253,7 +253,7 @@
     return solarTerms2026[solarTerms2026.length - 1];
   }
 
-  // 插入节气显示 - 修复位置：在文章网格之前插入
+  // 插入节气显示 - 修复：插入到页面最顶端
   function insertSolarTerm() {
     const term = getCurrentTerm();
     const colors = seasonColors[term.season];
@@ -261,41 +261,41 @@
     const termElement = document.createElement('div');
     termElement.id = 'shiyuan-solar-term';
     termElement.style.cssText = `
-      max-width: 1200px;
-      margin: 0 auto 20px;
-      padding: 0 16px;
+      width: 100%;
+      margin: 0;
+      padding: 0;
     `;
     termElement.innerHTML = `
       <div class="solar-term-container" style="
-        background: linear-gradient(135deg, ${colors.background} 0%, rgba(255,255,255,0.9) 100%);
-        border-left: 4px solid ${colors.primary};
-        padding: 16px 24px;
-        border-radius: 0 12px 12px 0;
+        background: linear-gradient(135deg, ${colors.background} 0%, rgba(255,255,255,0.95) 100%);
+        border-bottom: 1px solid ${colors.border};
+        padding: 12px 24px;
         font-family: system-ui, -apple-system, sans-serif;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
       ">
         <div style="
+          max-width: 1200px;
+          margin: 0 auto;
           display: flex;
           align-items: center;
           gap: 16px;
           flex-wrap: wrap;
         ">
-          <span style="font-size: 28px; line-height: 1;">${colors.icon}</span>
+          <span style="font-size: 24px; line-height: 1;">${colors.icon}</span>
           <div>
-            <div style="
+            <span style="
               font-weight: 600;
               color: ${colors.primary};
-              font-size: 18px;
-              letter-spacing: 0.08em;
-              margin-bottom: 4px;
-            ">${term.name}</div>
-            <div style="
+              font-size: 16px;
+              letter-spacing: 0.05em;
+              margin-right: 12px;
+            ">${term.name}</span>
+            <span style="
               color: ${colors.text};
               font-size: 14px;
               opacity: 0.9;
-            ">${term.desc}</div>
+            ">${term.desc}</span>
           </div>
-          <div style="
+          <span style="
             margin-left: auto;
             font-size: 12px;
             color: ${colors.text};
@@ -303,45 +303,40 @@
             font-style: italic;
           ">
             — 柿子院物候志 · Claw宝记
-          </div>
+          </span>
         </div>
       </div>
     `;
 
-    // 修复：在文章网格之前插入（作为兄弟节点，不是子节点）
-    const gridContainer = document.querySelector('.grid-container');
-    const mainContainer = document.querySelector('#container-inner') || document.querySelector('main');
+    // 修复：插入到页面最顶端（body 的第一个子元素）
+    const body = document.body;
+    const header = document.querySelector('header, #header, .header');
     
     let inserted = false;
     
-    // 方案1：在 grid-container 之前插入（最佳位置）
-    if (gridContainer && gridContainer.parentElement) {
+    // 方案1：在 header 之后插入（最佳位置）
+    if (header && header.parentElement === body) {
       try {
-        gridContainer.parentElement.insertBefore(termElement, gridContainer);
+        if (header.nextElementSibling) {
+          body.insertBefore(termElement, header.nextElementSibling);
+        } else {
+          body.appendChild(termElement);
+        }
         inserted = true;
-        console.log(`宝：节气「${term.name}」已显示在文章网格前`);
+        console.log(`宝：节气「${term.name}」已显示在 header 下方`);
       } catch (e) {
-        console.log('插入到网格前失败:', e.message);
+        console.log('插入到 header 后失败:', e.message);
       }
     }
     
-    // 方案2：在 main container 内的合适位置
-    if (!inserted && mainContainer) {
+    // 方案2：在 body 的最开头插入
+    if (!inserted && body) {
       try {
-        // 查找 main 内的第一个块级元素（通常是介绍文字）
-        const firstBlock = mainContainer.querySelector('.notion-text, .notion-viewport, article, div[class*="block"]');
-        if (firstBlock && firstBlock.parentElement === mainContainer) {
-          // 在第一个块之后插入
-          if (firstBlock.nextElementSibling) {
-            mainContainer.insertBefore(termElement, firstBlock.nextElementSibling);
-          } else {
-            mainContainer.appendChild(termElement);
-          }
-          inserted = true;
-          console.log(`宝：节气「${term.name}」已显示在介绍后`);
-        }
+        body.insertBefore(termElement, body.firstChild);
+        inserted = true;
+        console.log(`宝：节气「${term.name}」已显示在页面最顶端`);
       } catch (e) {
-        console.log('插入到 main 失败:', e.message);
+        console.log('插入到 body 开头失败:', e.message);
       }
     }
 
@@ -357,14 +352,13 @@
     style.id = 'solar-term-dark-styles';
     style.textContent = `
       .dark #shiyuan-solar-term .solar-term-container {
-        background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
-        border-left-color: var(--term-primary, #0EA5E9) !important;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.2) !important;
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%) !important;
+        border-bottom-color: var(--term-primary, #0EA5E9) !important;
       }
-      .dark #shiyuan-solar-term .solar-term-container div div:first-child {
+      .dark #shiyuan-solar-term .solar-term-container span:first-child + div span:first-child {
         color: var(--term-primary, #38BDF8) !important;
       }
-      .dark #shiyuan-solar-term .solar-term-container div div:last-child {
+      .dark #shiyuan-solar-term .solar-term-container span:first-child + div span:last-child {
         color: #94A3B8 !important;
       }
     `;
@@ -376,7 +370,6 @@
     document.addEventListener('DOMContentLoaded', () => {
       addDarkModeStyles();
       if (window.location.pathname === '/' || window.location.pathname === '') {
-        // 延迟一点确保页面结构加载完成
         setTimeout(insertSolarTerm, 100);
       }
     });
