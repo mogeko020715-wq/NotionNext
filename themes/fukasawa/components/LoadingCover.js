@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect } from 'react'
+import { useGlobal } from '@/lib/global'
 
 // 不同主题的加载文案
 const LOADING_THEMES = [
@@ -45,20 +46,25 @@ const LOADING_THEMES = [
 ]
 
 export default function LoadingCover () {
+  const { onLoading } = useGlobal()
   const [themeIndex, setThemeIndex] = useState(0)
   const [progress, setProgress] = useState(0)
 
   // 轮换主题
   useEffect(() => {
+    if (!onLoading) return
+    
     const themeInterval = setInterval(() => {
       setThemeIndex(prev => (prev + 1) % LOADING_THEMES.length)
     }, 2500)
 
     return () => clearInterval(themeInterval)
-  }, [])
+  }, [onLoading])
 
   // 进度条动画
   useEffect(() => {
+    if (!onLoading) return
+    
     const progressInterval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) return 0
@@ -67,9 +73,21 @@ export default function LoadingCover () {
     }, 300)
 
     return () => clearInterval(progressInterval)
-  }, [])
+  }, [onLoading])
+
+  // 当不在加载状态时，重置进度
+  useEffect(() => {
+    if (!onLoading) {
+      setProgress(0)
+    }
+  }, [onLoading])
 
   const currentTheme = LOADING_THEMES[themeIndex]
+
+  // 不在加载状态时不渲染
+  if (!onLoading) {
+    return null
+  }
 
   return (
     <div 
