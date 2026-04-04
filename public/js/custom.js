@@ -205,65 +205,58 @@
   // 季节配色方案
   const seasonColors = {
     spring: {
-      primary: '#0EA5E9',      // 春水蓝
-      background: '#F0F9FF',   // 浪白
-      text: '#0369A1',         // 深海蓝
-      border: '#BAE6FD',       // 浪花蓝
+      primary: '#0EA5E9',
+      background: '#F0F9FF',
+      text: '#0369A1',
+      border: '#BAE6FD',
       icon: '🌸'
     },
     summer: {
-      primary: '#10B981',      // 翠竹绿
-      background: '#ECFDF5',   // 薄荷白
-      text: '#047857',         // 森林绿
-      border: '#6EE7B7',       // 嫩绿
+      primary: '#10B981',
+      background: '#ECFDF5',
+      text: '#047857',
+      border: '#6EE7B7',
       icon: '🌿'
     },
     autumn: {
-      primary: '#D97706',      // 柿子橙（回归）
-      background: '#FFFBEB',   // 暖米色
-      text: '#92400E',         // 焦糖棕
-      border: '#FDE68A',       // 落叶黄
+      primary: '#D97706',
+      background: '#FFFBEB',
+      text: '#92400E',
+      border: '#FDE68A',
       icon: '🍂'
     },
     winter: {
-      primary: '#6366F1',      // 雪青
-      background: '#EEF2FF',   // 冰白
-      text: '#3730A3',         // 深夜蓝
-      border: '#C7D2FE',       // 薄雾蓝
+      primary: '#6366F1',
+      background: '#EEF2FF',
+      text: '#3730A3',
+      border: '#C7D2FE',
       icon: '❄️'
     }
   };
 
-  // 获取当前节气
   function getCurrentTerm() {
     const now = new Date();
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
     const currentDate = `${month}-${day}`;
     
-    // 找到当前节气
     for (let i = 0; i < solarTerms2026.length; i++) {
       if (currentDate >= solarTerms2026[i].date) {
-        // 检查是否已经到了下一个节气
         if (i < solarTerms2026.length - 1) {
           const nextDate = solarTerms2026[i + 1].date;
-          if (currentDate >= nextDate) {
-            continue;
-          }
+          if (currentDate >= nextDate) continue;
         }
         return solarTerms2026[i];
       }
     }
-    // 如果在年初（早于立春），返回大寒
     return solarTerms2026[solarTerms2026.length - 1];
   }
 
-  // 插入节气显示
+  // 插入节气显示 - 修复：添加重试次数限制
   function insertSolarTerm() {
     const term = getCurrentTerm();
     const colors = seasonColors[term.season];
     
-    // 创建节气元素
     const termElement = document.createElement('div');
     termElement.id = 'shiyuan-solar-term';
     termElement.innerHTML = `
@@ -282,10 +275,7 @@
           gap: 12px;
           flex-wrap: wrap;
         ">
-          <span style="
-            font-size: 20px;
-            line-height: 1;
-          ">${colors.icon}</span>
+          <span style="font-size: 20px; line-height: 1;">${colors.icon}</span>
           <span style="
             font-weight: 600;
             color: ${colors.primary};
@@ -311,32 +301,34 @@
       </div>
     `;
 
-    // 尝试多种插入位置
+    // 尝试多种插入位置 - 修复：简化选择器，增加兼容性
     const insertSelectors = [
-      '#theme-fukasawa main #container-inner',  // 主内容区顶部
-      '#theme-fukasawa #wrapper',                // 主内容区
-      '#theme-fukasawa .grid-container',         // 文章列表前
-      'main'                                      // 任意 main
+      'main article:first-of-type',
+      'main .notion-page',
+      '#theme-fukasawa main',
+      'main'
     ];
 
     let inserted = false;
     for (const selector of insertSelectors) {
-      const container = document.querySelector(selector);
-      if (container) {
-        container.insertBefore(termElement, container.firstChild);
-        inserted = true;
-        console.log(`宝：节气「${term.name}」已显示 - ${term.desc}`);
-        break;
+      try {
+        const container = document.querySelector(selector);
+        if (container) {
+          container.insertBefore(termElement, container.firstChild);
+          inserted = true;
+          console.log(`宝：节气「${term.name}」已显示`);
+          break;
+        }
+      } catch (e) {
+        console.log('插入失败:', selector, e.message);
       }
     }
 
     if (!inserted) {
-      console.log('宝：没找到合适位置插入节气，稍后重试...');
-      setTimeout(insertSolarTerm, 1000);
+      console.log('宝：当前页面不支持显示节气');
     }
   }
 
-  // 深色模式适配
   function addDarkModeStyles() {
     if (document.getElementById('solar-term-dark-styles')) return;
     
@@ -357,24 +349,19 @@
     document.head.appendChild(style);
   }
 
-  // 初始化
+  // 初始化 - 修复：只在首页执行，避免文章页报错
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-      insertSolarTerm();
       addDarkModeStyles();
+      // 只在首页显示节气
+      if (window.location.pathname === '/' || window.location.pathname === '') {
+        insertSolarTerm();
+      }
     });
   } else {
-    insertSolarTerm();
     addDarkModeStyles();
-  }
-
-  // 每小时检查一次是否需要更新（节气变化）
-  setInterval(() => {
-    const existing = document.getElementById('shiyuan-solar-term');
-    if (existing) {
-      existing.remove();
+    if (window.location.pathname === '/' || window.location.pathname === '') {
       insertSolarTerm();
     }
-  }, 3600000); // 1小时
-
+  }
 })();
