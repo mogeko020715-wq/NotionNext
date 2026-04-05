@@ -95,7 +95,7 @@ const SEO = props => {
     NOTION_CONFIG
   )
 
-  const FACEBOOK_PAFE = siteConfig('FACEBOOK_PAGE', null, NOTION_CONFIG)
+  const FACEBOOK_PAGE = siteConfig('FACEBOOK_PAGE', null, NOTION_CONFIG)
 
   const AUTHOR = siteConfig('AUTHOR')
   return (
