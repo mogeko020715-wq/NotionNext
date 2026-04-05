@@ -190,12 +190,6 @@ const nextConfig = {
         }
 
         return [
-          // 菜园花圃页面重写 - 放在最前面优先匹配
-          {
-            source: '/garden',
-            destination: '/article/garden',
-            basePath: false
-          },
           ...langsRewrites,
           // 伪静态重写
           {
