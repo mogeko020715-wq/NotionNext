@@ -69,8 +69,6 @@ function scanSubdirectories(directory) {
     if (stats.isDirectory()) {
       subdirectories.push(file)
     }
-
-    // subdirectories.push(file)
   })
 
   return subdirectories
@@ -149,12 +147,6 @@ const nextConfig = {
             source: '/feed',
             destination: '/rss/feed.xml',
             permanent: true
-          },
-          // 菜园花圃页面重定向
-          {
-            source: '/garden',
-            destination: '/article/garden',
-            permanent: true
           }
         ]
       },
@@ -198,6 +190,11 @@ const nextConfig = {
         }
 
         return [
+          // 菜园花圃页面重写 - 放在最前面优先匹配
+          {
+            source: '/garden',
+            destination: '/article/garden'
+          },
           ...langsRewrites,
           // 伪静态重写
           {
