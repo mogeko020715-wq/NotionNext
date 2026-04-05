@@ -20,6 +20,7 @@ import BlogListScroll from './components/BlogListScroll'
 import BlogArchiveItem from './components/BlogPostArchive'
 import Header from './components/Header'
 import LoadingCover from './components/LoadingCover'
+import SeasonSwitcher from './components/SeasonSwitcher'
 import TagItemMini from './components/TagItemMini'
 import CONFIG from './config'
 import { Style } from './style'
@@ -47,13 +48,14 @@ export const useFukasawaGlobal = () => useContext(ThemeGlobalFukasawa)
 const LayoutBase = props => {
   const { children, headerSlot } = props
   const leftAreaSlot = <Live2D />
-  const { onLoading, fullWidth } = useGlobal()
+  const { onLoading, fullWidth, season } = useGlobal()
   const searchModal = useRef(null)
   return (
     <ThemeGlobalFukasawa.Provider value={{ searchModal }}>
       <LoadingCover />
       <div
         id='theme-fukasawa'
+        data-season={season}
         className={`${siteConfig('FONT_STYLE')} dark:bg-black scroll-smooth`}>
         <Style />
         {/* 页头导航，此主题只在移动端生效 */}
@@ -97,6 +99,11 @@ const LayoutBase = props => {
         </div>
 
         <AlgoliaSearchModal cRef={searchModal} {...props} />
+        
+        {/* 季节主题切换器 - 固定在左下角 */}
+        <div className="fixed bottom-4 left-4 z-50">
+          <SeasonSwitcher />
+        </div>
       </div>
     </ThemeGlobalFukasawa.Provider>
   )
