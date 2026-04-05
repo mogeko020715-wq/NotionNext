@@ -95,7 +95,7 @@ const SEO = props => {
     NOTION_CONFIG
   )
 
-  const FACEBOOK_PAGE = siteConfig('FACEBOOK_PAGE', null, NOTION_CONFIG)
+  const FACEBOOK_PAFE = siteConfig('FACEBOOK_PAGE', null, NOTION_CONFIG)
 
   const AUTHOR = siteConfig('AUTHOR')
   return (
@@ -245,7 +245,7 @@ const generateStructuredData = (meta, siteInfo, url, image, author) => {
     }
   }
 
-  // 如果是文章页面，添加文章结构化数据
+  // 是文章页面，添加文章结构化数据
   if (meta?.type === 'Post') {
     return {
       '@context': 'https://schema.org',
