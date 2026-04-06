@@ -302,7 +302,7 @@
             opacity: 0.6;
             font-style: italic;
           ">
-            — 柿子院物候志 · Claw宝记
+            — 柿子院物候志
           </span>
         </div>
       </div>
